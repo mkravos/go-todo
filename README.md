@@ -7,8 +7,7 @@ In the root directory, run the following command to start the backend:
 make run
 ```
 
-In the client directory, run the following commands to install dependencies and start the frontend:
+In the client directory, run the following command to install dependencies and start the frontend:
 ```bash
-npm install
-npm start
+npm install && npm start
 ```
