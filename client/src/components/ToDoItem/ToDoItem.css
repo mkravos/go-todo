@@ -11,12 +11,27 @@
     margin-top: 25px;
 }
 
+.Todo-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 40vw;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-y: scroll; 
+}
+.Todo-content::-webkit-scrollbar {
+    display: none;
+}
+
 .Todo-text {
     font-size: 30px;
 }
 .Todo-datetime {
     font-size: 14px;
-    color: rgb(68, 68, 68);
+    color: rgb(73, 73, 73);
     margin-top: 5px;
 }
 
@@ -28,6 +43,7 @@
 }
 
 .Edit-item-btn {
+    cursor: pointer;
     background-color: #4564ff;
     font-weight: 500;
     color: white;
@@ -36,7 +52,14 @@
     width: 65px;
     padding: 10px;
 }
+.Edit-item-btn:hover {
+    transform: scale(1.05);
+}
+.Edit-item-btn:active {
+    background-color: #002aff;
+}
 .Delete-item-btn {
+    cursor: pointer;
     background-color: #c60000;
     font-weight: 500;
     color: white;
@@ -45,4 +68,10 @@
     width: 65px;
     padding: 10px;
     margin-left: 10px;
+}
+.Delete-item-btn:hover {
+    transform: scale(1.05);
+}
+.Delete-item-btn:active {
+    background-color: #890000;
 }
