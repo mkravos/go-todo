@@ -88,20 +88,19 @@ func main() {
 		// instantiate a new TodoItem object
 		todo_item := &TodoItem{}
 
-		// destructure payload into struct
-		payload := struct {
-			Text string `json:"text"`
-			Due  string `json:"due"`
-		}{}
-
-		// parse request body into payload or return error
-		if err := c.BodyParser(&payload); err != nil {
+		// check todo_item for errors
+		if err := c.BodyParser(todo_item); err != nil {
 			c.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{"message": "request failed"})
 			return err
 		}
 
-		// check todo_item for errors
-		if err := c.BodyParser(todo_item); err != nil {
+		// destructure payload into struct
+		payload := struct {
+			Text string `json:"text"`
+		}{}
+
+		// parse request body into payload or return error
+		if err := c.BodyParser(&payload); err != nil {
 			c.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{"message": "request failed"})
 			return err
 		}
@@ -126,9 +125,65 @@ func main() {
 		return c.JSON(&todo_items)
 	})
 
-	// gets all todo items
+	// Gets all todo items.
 	app.Get("/api/get-todo-items", func(c *fiber.Ctx) error {
-		// return list of todo items
+		todo_items := []TodoItem{}
+		db.Find(&todo_items)
+		return c.JSON(&todo_items)
+	})
+
+	// Edits todo item by ID.
+	app.Post("/api/edit-todo-item", func(c *fiber.Ctx) error {
+		// instantiate a new TodoItem object
+		todo_item := &TodoItem{}
+
+		// check todo_item for errors
+		if err := c.BodyParser(todo_item); err != nil {
+			c.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{"message": "request failed"})
+			return err
+		}
+
+		// destructure payload into struct
+		payload := struct {
+			ID   int    `json:"id"`
+			Text string `json:"text"`
+		}{}
+
+		// parse request body into payload or return error
+		if err := c.BodyParser(&payload); err != nil {
+			c.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{"message": "request failed"})
+			return err
+		}
+
+		// add new text to item
+		todo_item.Text = payload.Text
+
+		// edit db entry
+		db.Model(&TodoItem{}).Where("id = ?", payload.ID).Update("text", payload.Text)
+
+		// return new list of todo items
+		todo_items := []TodoItem{}
+		db.Find(&todo_items)
+		return c.JSON(&todo_items)
+	})
+
+	// Deletes todo item by ID.
+	app.Delete("/api/delete-todo-item", func(c *fiber.Ctx) error {
+		// destructure payload into struct
+		payload := struct {
+			ID int `json:"id"`
+		}{}
+
+		// parse request body into payload or return error
+		if err := c.BodyParser(&payload); err != nil {
+			c.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{"message": "request failed"})
+			return err
+		}
+
+		// delete db entry
+		db.Delete(&TodoItem{}, payload.ID)
+
+		// return new list of todo items
 		todo_items := []TodoItem{}
 		db.Find(&todo_items)
 		return c.JSON(&todo_items)
