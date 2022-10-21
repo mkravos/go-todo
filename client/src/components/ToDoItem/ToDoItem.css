@@ -1,0 +1,48 @@
+.Todo-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 35px;
+    height: 50px;
+    width: 55vw;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 2px 4px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 2px;
+    background-color: rgb(253, 253, 253);
+    border-radius: 10px;
+    margin-top: 25px;
+}
+
+.Todo-text {
+    font-size: 30px;
+}
+.Todo-datetime {
+    font-size: 14px;
+    color: rgb(68, 68, 68);
+    margin-top: 5px;
+}
+
+.Todo-controls {
+    display: flex;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 2px 4px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 2px;
+    padding: 10px;
+}
+
+.Edit-item-btn {
+    background-color: #4564ff;
+    font-weight: 500;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 65px;
+    padding: 10px;
+}
+.Delete-item-btn {
+    background-color: #c60000;
+    font-weight: 500;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 65px;
+    padding: 10px;
+    margin-left: 10px;
+}
