@@ -6,7 +6,15 @@ function App() {
   const [ items, setItems ] = useState();
   const [ text, setText ] = useState("");
   const [ created, setCreated ] = useState("");
-  const [ addingDisabled, setAddingDisabled ] = useState(false);
+  
+  var [ editCount, setEditCount ] = useState(0);
+  var addingDisabled = false;
+
+  if(editCount > 0) {
+    addingDisabled = true;
+  } else {
+    addingDisabled = false;
+  }
 
   const handleChange = e => {
     setText(e.target.value);
@@ -66,7 +74,7 @@ function App() {
               <form onSubmit={handleSubmit}>
                   <input 
                     className="Add-todo" 
-                    placeholder={!addingDisabled ? "Enter a reminder and press return" : "Press return to submit your edits"} 
+                    placeholder={editCount < 1 ? "Enter a reminder and press return" : "Press return to submit your edits"} 
                     type="text"
                     name="text"
                     value={text}
@@ -102,7 +110,8 @@ function App() {
                     text={val.text} 
                     created={val.created} 
                     getItemList={getItemList} 
-                    setAddingDisabled={setAddingDisabled}
+                    setEditCount={setEditCount}
+                    editCount={editCount}
                   />
                 );
               })

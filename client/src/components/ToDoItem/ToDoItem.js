@@ -1,7 +1,7 @@
 import "./ToDoItem.css";
 import React, {useState} from "react";
 
-export default function ToDoItem({id, text, created, getItemList, setAddingDisabled}) {
+export default function ToDoItem({id, text, created, getItemList, setAddingDisabled, editCount, setEditCount}) {
     const [ editingText, setEditingText ] = useState(false);
     const [ editBtnText, setEditBtnText ] = useState("Edit");
     const [ newText, setNewText ] = useState("");
@@ -29,13 +29,13 @@ export default function ToDoItem({id, text, created, getItemList, setAddingDisab
         e.preventDefault();
         if(!editingText) {
             setEditingText(true);
-            setAddingDisabled(true);
+            setEditCount(editCount += 1);
             setEditBtnText("Cancel");
             setNewText(text);
         }
         else {
             setEditingText(false);
-            setAddingDisabled(false);
+            setEditCount(editCount -= 1);
             setEditBtnText("Edit");
         }
     }
