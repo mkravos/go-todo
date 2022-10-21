@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -13,6 +12,7 @@ import (
 	"github.com/joho/godotenv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 type TodoItem struct {
@@ -75,8 +75,14 @@ func main() {
 		log.Fatal("Could not migrate the database")
 	}
 
+	corsSettings := cors.New(cors.Config{
+		AllowOrigins: os.Getenv("CLIENT_URL"),
+		AllowMethods: "GET,POST,DELETE",
+	})
+
 	// initialize app
 	app := fiber.New()
+	app.Use(corsSettings)
 
 	// health check
 	app.Get("/healthcheck", func(c *fiber.Ctx) error {
@@ -96,7 +102,8 @@ func main() {
 
 		// destructure payload into struct
 		payload := struct {
-			Text string `json:"text"`
+			Text    string `json:"text"`
+			Created string `json:"created"`
 		}{}
 
 		// parse request body into payload or return error
@@ -108,7 +115,7 @@ func main() {
 		// add text to item
 		todo_item.Text = payload.Text
 		// add datetime of creation to item
-		todo_item.Created = time.Now().String()
+		todo_item.Created = payload.Created
 
 		// add db entry
 		err := db.Create(&todo_item).Error
@@ -189,6 +196,6 @@ func main() {
 		return c.JSON(&todo_items)
 	})
 
-	// listen on port specified in .env file
-	log.Fatal(app.Listen(os.Getenv("SERVER_PORT")))
+	// listen on port 8081
+	log.Fatal(app.Listen(":8081"))
 }

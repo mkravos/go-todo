@@ -29,6 +29,10 @@
 .Todo-text {
     font-size: 30px;
 }
+.Todo-inline-edit {
+    font-size: 30px;
+    border: none;
+}
 .Todo-datetime {
     font-size: 14px;
     color: rgb(73, 73, 73);
