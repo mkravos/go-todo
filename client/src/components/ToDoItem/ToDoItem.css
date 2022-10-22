@@ -79,3 +79,7 @@
 .Delete-item-btn:active {
     background-color: #890000;
 }
+.Delete-item-btn:disabled {
+    background-color: #565656;
+    transform: none;
+}
