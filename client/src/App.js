@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import ToDoItem from "./components/ToDoItem/ToDoItem"
 
 function App() {
-  const [ items, setItems ] = useState([]); // to do items list
+  const [ items, setItems ] = useState(); // to do items list
   const [ text, setText ] = useState(""); // to do item text
   const [ created, setCreated ] = useState(""); // to do item creation date
 
