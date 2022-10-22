@@ -3,24 +3,29 @@ import React, {useState} from "react";
 import ToDoItem from "./components/ToDoItem/ToDoItem"
 
 function App() {
-  const [ items, setItems ] = useState();
-  const [ text, setText ] = useState("");
-  const [ created, setCreated ] = useState("");
-  
+  const [ items, setItems ] = useState([]); // to do items list
+  const [ text, setText ] = useState(""); // to do item text
+  const [ created, setCreated ] = useState(""); // to do item creation date
+
+  // maintain count for how many elements are being edited
   var [ editCount, setEditCount ] = useState(0);
   var addingDisabled = false;
 
+  // prevent adding new todo items while editing existing ones
+  //   this prevents buggy item adding behavior
   if(editCount > 0) {
     addingDisabled = true;
   } else {
     addingDisabled = false;
   }
 
+  // update text and creation date when called
   const handleChange = e => {
     setText(e.target.value);
     setCreated(new Date());
   }
 
+  // get all todo items from database
   const getItems = async () => {
     try {
       const res = await fetch("http://localhost:8081/api/get-todo-items/", {
@@ -33,6 +38,8 @@ function App() {
       console.error(err.message);
     }
   }
+
+  // update state of item list without refreshing
   function getItemList() {
     getItems()
     .then(value => {
@@ -43,6 +50,7 @@ function App() {
     getItemList();
   }
 
+  // submits the "add todo item" form and sends new todo entry to the database
   const handleSubmit = async e => {
     e.preventDefault();
     try {
@@ -53,8 +61,8 @@ function App() {
       });
 
       const parseRes = await res.json();
-      getItemList();
-      setText("");
+      getItemList(); // update state without refreshing
+      setText(""); // reset state of text field
       return parseRes;
     } catch (err) {
       console.error(err.message);
@@ -87,6 +95,9 @@ function App() {
           {
             items ? 
               items.sort((a, b) => {
+                // sorts todo items in a descending fashion based on date of creation
+                // before mapping them to the frontend component
+
                 let date1 = undefined;
                 let date2 = undefined;
             
@@ -106,12 +117,12 @@ function App() {
                 return (
                   <ToDoItem 
                     key={key} 
-                    id={val.id} 
-                    text={val.text} 
-                    created={val.created} 
-                    getItemList={getItemList} 
-                    setEditCount={setEditCount}
-                    editCount={editCount}
+                    id={val.id} // todo item id
+                    text={val.text} // todo item text field
+                    created={val.created}  // todo item creation date
+                    getItemList={getItemList} // todo item component calls this to update the state of the item list
+                    setEditCount={setEditCount} // pass this to prevent adding new todo items while editing an entry
+                    editCount={editCount} // prop threading is used for parent to keep track of how many items are being edited
                   />
                 );
               })
