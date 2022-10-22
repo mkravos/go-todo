@@ -69,6 +69,7 @@ export default function ToDoItem({id, text, created, getItemList, editCount, set
             getItemList(); // update the todo list state
             setEditBtnText("Edit"); // reset edit button text
             setDeletingDisabled(false); // reset delete button
+            setEditCount(editCount -= 1); // decrement edit counter
             return parseRes;
           } catch (err) {
             console.error(err.message);
