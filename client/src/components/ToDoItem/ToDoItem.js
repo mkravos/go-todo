@@ -11,6 +11,9 @@ export default function ToDoItem({id, text, created, getItemList, editCount, set
     // used to control the todo text input field's value when editing a todo item
     const [ newText, setNewText ] = useState(""); 
 
+    // used to enable and disable item deletion when editing an item
+    const [ deletingDisabled, setDeletingDisabled ] = useState(false); 
+
     // generates a date from the "created" string parameter
     var date = new Date(created);
 
@@ -25,14 +28,6 @@ export default function ToDoItem({id, text, created, getItemList, editCount, set
           });
     
           const parseRes = await res.json();
-          
-          // if edit is set to true
-          if(editingText===true) {
-            setEditingText(false); // set text editing to false
-            setEditCount(editCount -= 1); // decrement the edit counter
-            setEditBtnText("Edit"); // reset edit button text
-          }
-
           getItemList(); // update the todo list state
           return parseRes;
         } catch (err) {
@@ -46,12 +41,14 @@ export default function ToDoItem({id, text, created, getItemList, editCount, set
         e.preventDefault();
         if(!editingText) {
             setEditingText(true); // set text editing to true
+            setDeletingDisabled(true);
             setEditCount(editCount += 1); // increment the edit counter
             setEditBtnText("Cancel"); // change edit button text to "Cancel"
             setNewText(text); // set the input field to the existing todo item's value
         }
         else {
             setEditingText(false); // set text editing to false
+            setDeletingDisabled(false);
             setEditCount(editCount -= 1); // decrement the edit counter
             setEditBtnText("Edit"); // reset edit button text
         }
@@ -93,7 +90,7 @@ export default function ToDoItem({id, text, created, getItemList, editCount, set
             </div>
             <div className="Todo-controls">
                 <button className="Edit-item-btn" onClick={handleEdit}>{editBtnText}</button>
-                <button className="Delete-item-btn" onClick={handleDelete}>Delete</button>
+                <button className="Delete-item-btn" onClick={handleDelete} disabled={deletingDisabled}>Delete</button>
             </div>
         </div>
     );
