@@ -1,13 +1,20 @@
 import "./ToDoItem.css";
 import React, {useState} from "react";
 
-export default function ToDoItem({id, text, created, getItemList, setAddingDisabled, editCount, setEditCount}) {
+export default function ToDoItem({id, text, created, getItemList, editCount, setEditCount}) {
+    // flag for switching between text field and plain text when editing an item
     const [ editingText, setEditingText ] = useState(false);
-    const [ editBtnText, setEditBtnText ] = useState("Edit");
-    const [ newText, setNewText ] = useState("");
 
+    // used to control the "edit" button's text value
+    const [ editBtnText, setEditBtnText ] = useState("Edit");
+
+    // used to control the todo text input field's value when editing a todo item
+    const [ newText, setNewText ] = useState(""); 
+
+    // generates a date from the "created" string parameter
     var date = new Date(created);
 
+    // handles deletion of a todo item and updates the todo list state
     const handleDelete = async e => {
         e.preventDefault();
         try {
@@ -18,28 +25,31 @@ export default function ToDoItem({id, text, created, getItemList, setAddingDisab
           });
     
           const parseRes = await res.json();
-          getItemList();
+          getItemList(); // update the todo list state
           return parseRes;
         } catch (err) {
           console.error(err.message);
         }
     }
 
+    // handles switching between input field and plain text div when edit is selected or deselected
+    // also handles edit count for edit tracking in the parent
     const handleEdit = async e => {
         e.preventDefault();
         if(!editingText) {
-            setEditingText(true);
-            setEditCount(editCount += 1);
-            setEditBtnText("Cancel");
-            setNewText(text);
+            setEditingText(true); // set text editing to true
+            setEditCount(editCount += 1); // increment the edit counter
+            setEditBtnText("Cancel"); // change edit button text to "Cancel"
+            setNewText(text); // set the input field to the existing todo item's value
         }
         else {
-            setEditingText(false);
-            setEditCount(editCount -= 1);
-            setEditBtnText("Edit");
+            setEditingText(false); // set text editing to false
+            setEditCount(editCount -= 1); // decrement the edit counter
+            setEditBtnText("Edit"); // reset edit button text
         }
     }
 
+    // handles the submission of the edit todo item form
     const handleEditSubmit = async e => {
         e.preventDefault();
         setEditingText(false);
@@ -51,9 +61,8 @@ export default function ToDoItem({id, text, created, getItemList, setAddingDisab
             });
       
             const parseRes = await res.json();
-            getItemList();
-            setEditBtnText("Edit");
-            setAddingDisabled(false);
+            getItemList(); // update the todo list state
+            setEditBtnText("Edit"); // reset edit button text
             return parseRes;
           } catch (err) {
             console.error(err.message);
@@ -64,6 +73,7 @@ export default function ToDoItem({id, text, created, getItemList, setAddingDisab
         <div className="Todo-item">
             <div className="Todo-content">
                 {
+                    // if text editing is on, show an input field. otherwise, show plain text div.
                     editingText ? 
                         <form onSubmit={handleEditSubmit}>
                             <input className="Todo-inline-edit" type="text" value={newText} onChange={e => setNewText(e.target.value)} autoFocus required/>
