@@ -25,6 +25,14 @@ export default function ToDoItem({id, text, created, getItemList, editCount, set
           });
     
           const parseRes = await res.json();
+          
+          // if edit is set to true
+          if(editingText===true) {
+            setEditingText(false); // set text editing to false
+            setEditCount(editCount -= 1); // decrement the edit counter
+            setEditBtnText("Edit"); // reset edit button text
+          }
+
           getItemList(); // update the todo list state
           return parseRes;
         } catch (err) {
