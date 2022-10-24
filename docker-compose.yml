@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  web:
+    platform: linux/amd64
+    restart: unless-stopped
+    build: ./server
+    ports:
+      - 8081:8081
+    depends_on:
+      - db
+    environment:
+      # db
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: majk
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+      POSTGRES_SSLMODE: disable
+      # app
+      CLIENT_URL: http://localhost:3000
+  client:
+    platform: linux/amd64
+    restart: unless-stopped
+    build: ./client
+    ports:
+      - 3000:3000
+  db:
+    platform: linux/amd64
+    image: postgres:13.0-alpine
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=majk
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=postgres
+    ports:
+      - 5432:5432
+volumes:
+  postgres_data:
