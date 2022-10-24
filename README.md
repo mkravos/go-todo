@@ -16,3 +16,14 @@ In the client directory, run the following command to install dependencies and s
 ```bash
 npm install && npm start
 ```
+
+# Running the app in Docker
+
+Ensure you have Docker installed.
+
+In the root directory, run the following command to build the Docker container images:
+```bash
+docker-compose up
+```
+
+The container should be accessible at http://localhost:3000
